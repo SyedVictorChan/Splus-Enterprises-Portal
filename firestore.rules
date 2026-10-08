@@ -1,0 +1,174 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net: Default-deny all unhandled paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isBootstrappedAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email.lower() == 'farazrizvi2002@gmail.com' ||
+        request.auth.token.email.lower() == 'data.processor@splustech.com' ||
+        request.auth.token.email.lower() == 'manager.support@splustech.com' ||
+        request.auth.token.email.lower() == 'orderprocessor@splustech.com'
+      );
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        isBootstrappedAdmin() ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isManager() {
+      return isSignedIn() && (
+        isAdmin() ||
+        (
+          exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager'
+        )
+      );
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Users collection with role-based attributes
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+    // Admins registry collection
+    match /admins/{userId} {
+      allow read, write: if true;
+    }
+
+    // Authorized Team Whitelist collection
+    // Allow read and write so administrator configured members can sync across devices and browsers
+    match /authorized_members/{memberId} {
+      allow read, write: if true;
+    }
+
+    // User Invitations collection
+    match /invitations/{inviteId} {
+      allow read, write: if true;
+    }
+
+    // Central Organization Data Architecture for Splus Enterprises
+    // All authorized users connect to this single central enterprise dataset
+    match /organizations/{orgId} {
+      allow read, write: if true;
+
+      match /batches/{batchId} {
+        allow read, write: if true;
+      }
+
+      match /record_chunks/{chunkId} {
+        allow read, write: if true;
+      }
+
+      match /sales_records/{recordId} {
+        allow read, write: if true;
+      }
+
+      match /daily_reports/{reportDate} {
+        allow read, write: if true;
+      }
+
+      match /daily_purchasing/{reportDate} {
+        allow read, write: if true;
+      }
+
+      match /templates/{templateId} {
+        allow read, write: if true;
+      }
+
+      match /purchasing_pos/{poId} {
+        allow read, write: if true;
+      }
+
+      match /purchasing_suppliers/{supplierId} {
+        allow read, write: if true;
+      }
+
+      match /purchasing_receipts/{receiptId} {
+        allow read, write: if true;
+      }
+
+      match /purchasing_payments/{paymentId} {
+        allow read, write: if true;
+      }
+
+      match /purchasing_settings/{settingId} {
+        allow read, write: if true;
+      }
+
+      match /rma_records/{rmaId} {
+        allow read, write: if true;
+      }
+
+      match /rma_settings/{settingId} {
+        allow read, write: if true;
+      }
+
+      match /live_sheets_config/{configId} {
+        allow read, write: if true;
+      }
+
+      match /product_catalog/{productId} {
+        allow read, write: if true;
+      }
+
+      match /audit_logs/{logId} {
+        allow read, write: if true;
+      }
+    }
+
+    // Enterprise Audit Logs
+    match /audit_logs/{logId} {
+      allow read, write: if true;
+    }
+
+    // Pending Invitations
+    match /invitations/{invId} {
+      allow read, write: if true;
+    }
+
+    // Sales records collection
+    match /sales_records/{recordId} {
+      allow read, write: if true;
+    }
+
+    // Organization Settings
+    match /organization_settings/{settingId} {
+      allow read, write: if true;
+    }
+
+    // Connection health check
+    match /test/{testId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

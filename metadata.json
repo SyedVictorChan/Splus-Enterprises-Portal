@@ -1,0 +1,8 @@
+{
+  "name": "Splus Sales Dashboard",
+  "description": "Centralized multi-channel sales analytics, enterprise purchasing & procurement, RMA returns management, and reporting platform with automated spreadsheet ingestion, data normalization, and BI dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

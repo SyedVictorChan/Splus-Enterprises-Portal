@@ -1,0 +1,317 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with organizational role for access control",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 254 },
+        "displayName": { "type": "string", "maxLength": 120 },
+        "role": { "type": "string", "enum": ["admin", "manager", "team_member"] },
+        "photoURL": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "Marker document designating verified organization administrators",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "maxLength": 254 },
+        "addedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["email"]
+    },
+    "TestConnection": {
+      "title": "TestConnection",
+      "description": "Health check document for connection verification",
+      "type": "object",
+      "properties": {
+        "status": { "type": "string", "maxLength": 64 }
+      }
+    },
+    "AuthorizedMember": {
+      "title": "AuthorizedMember",
+      "description": "Pre-approved team whitelist allowing only authorized personnel to log in",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "maxLength": 254 },
+        "role": { "type": "string", "enum": ["admin", "manager", "team_member"] },
+        "addedBy": { "type": "string", "maxLength": 128 },
+        "addedAt": { "type": "string", "maxLength": 64 },
+        "note": { "type": "string", "maxLength": 256 }
+      },
+      "required": ["email", "role"]
+    },
+    "SalesRecord": {
+      "title": "SalesRecord",
+      "description": "Individual transaction sales record across integrated marketplaces",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "orderId": { "type": "string", "maxLength": 128 },
+        "date": { "type": "string", "maxLength": 32 },
+        "marketplace": { "type": "string", "maxLength": 64 },
+        "store": { "type": "string", "maxLength": 128 },
+        "sku": { "type": "string", "maxLength": 128 },
+        "productName": { "type": "string", "maxLength": 256 },
+        "unitsSold": { "type": "number" },
+        "salePrice": { "type": "number" },
+        "revenue": { "type": "number" },
+        "cost": { "type": "number" },
+        "profit": { "type": "number" },
+        "status": { "type": "string", "maxLength": 32 },
+        "importBatchId": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "date", "marketplace", "store", "revenue"]
+    },
+    "OrganizationSettings": {
+      "title": "OrganizationSettings",
+      "description": "Global enterprise targets, currencies, and company configuration",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "companyName": { "type": "string", "maxLength": 128 },
+        "currency": { "type": "string", "maxLength": 10 },
+        "currencySymbol": { "type": "string", "maxLength": 10 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "currency", "currencySymbol"]
+    },
+    "Organization": {
+      "title": "Organization",
+      "description": "Central enterprise organization entity containing shared metadata, global settings, and aggregate statistics",
+      "type": "object",
+      "properties": {
+        "orgId": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 128 },
+        "totalRecords": { "type": "number" },
+        "totalBatches": { "type": "number" },
+        "lastUpdated": { "type": "string", "maxLength": 64 },
+        "lastUpdatedBy": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["orgId", "name"]
+    },
+    "ImportBatch": {
+      "title": "ImportBatch",
+      "description": "Metadata for imported sales spreadsheets shared across authorized enterprise members",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "organizationId": { "type": "string", "maxLength": 64 },
+        "fileName": { "type": "string", "maxLength": 256 },
+        "sheetName": { "type": "string", "maxLength": 256 },
+        "importedAt": { "type": "string", "maxLength": 64 },
+        "importedBy": { "type": "string", "maxLength": 128 },
+        "totalRows": { "type": "number" },
+        "validRows": { "type": "number" },
+        "duplicateRows": { "type": "number" },
+        "invalidRows": { "type": "number" },
+        "status": { "type": "string", "maxLength": 32 }
+      },
+      "required": ["id", "fileName", "importedAt"]
+    },
+    "RecordChunk": {
+      "title": "RecordChunk",
+      "description": "Chunked array of normalized sales records stored for optimal network throughput and atomic batches",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "organizationId": { "type": "string", "maxLength": 64 },
+        "batchId": { "type": "string", "maxLength": 128 },
+        "chunkIndex": { "type": "number" },
+        "totalChunks": { "type": "number" },
+        "recordsCount": { "type": "number" },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "batchId", "chunkIndex", "recordsCount"]
+    },
+    "Supplier": {
+      "title": "Supplier",
+      "description": "Procurement supplier directory with payment terms and contact details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "code": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 256 },
+        "contactPerson": { "type": "string", "maxLength": 128 },
+        "phone": { "type": "string", "maxLength": 64 },
+        "email": { "type": "string", "maxLength": 254 },
+        "country": { "type": "string", "maxLength": 128 },
+        "paymentTerms": { "type": "string", "maxLength": 64 },
+        "status": { "type": "string", "enum": ["Active", "Inactive"] },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "code", "name", "status"]
+    },
+    "PurchaseOrder": {
+      "title": "PurchaseOrder",
+      "description": "Purchase order contract detailing ordered line items, delivery schedule, and financial totals",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "poNumber": { "type": "string", "maxLength": 64 },
+        "supplierId": { "type": "string", "maxLength": 128 },
+        "supplierName": { "type": "string", "maxLength": 256 },
+        "poDate": { "type": "string", "maxLength": 32 },
+        "expectedDeliveryDate": { "type": "string", "maxLength": 32 },
+        "currency": { "type": "string", "maxLength": 10 },
+        "paymentTerms": { "type": "string", "maxLength": 64 },
+        "subtotal": { "type": "number" },
+        "totalDiscount": { "type": "number" },
+        "totalTax": { "type": "number" },
+        "totalAmount": { "type": "number" },
+        "paidAmount": { "type": "number" },
+        "outstandingAmount": { "type": "number" },
+        "status": { "type": "string", "maxLength": 32 },
+        "paymentStatus": { "type": "string", "maxLength": 32 },
+        "receivingStatus": { "type": "string", "maxLength": 32 },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "poNumber", "supplierId", "totalAmount", "status"]
+    },
+    "PurchaseReceipt": {
+      "title": "PurchaseReceipt",
+      "description": "Goods receipt transaction tracking items and quantities checked into inventory",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "poId": { "type": "string", "maxLength": 128 },
+        "poNumber": { "type": "string", "maxLength": 64 },
+        "receiptDate": { "type": "string", "maxLength": 32 },
+        "receivedBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "poId", "poNumber", "receiptDate"]
+    },
+    "SupplierPayment": {
+      "title": "SupplierPayment",
+      "description": "Financial payment transaction recorded against purchase orders",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "poId": { "type": "string", "maxLength": 128 },
+        "poNumber": { "type": "string", "maxLength": 64 },
+        "supplierId": { "type": "string", "maxLength": 128 },
+        "amount": { "type": "number" },
+        "paymentDate": { "type": "string", "maxLength": 32 },
+        "paymentMethod": { "type": "string", "maxLength": 64 },
+        "referenceNumber": { "type": "string", "maxLength": 128 },
+        "recordedBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "poId", "supplierId", "amount", "paymentDate"]
+    },
+    "AuditLogEntry": {
+      "title": "AuditLogEntry",
+      "description": "Immutable enterprise audit log recording performer identity, action, module, old/new values, and device origin",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "organizationId": { "type": "string", "maxLength": 64 },
+        "timestamp": { "type": "string", "maxLength": 64 },
+        "actorId": { "type": "string", "maxLength": 128 },
+        "actorEmail": { "type": "string", "maxLength": 254 },
+        "actorName": { "type": "string", "maxLength": 128 },
+        "actorRole": { "type": "string", "maxLength": 64 },
+        "actorDepartment": { "type": "string", "maxLength": 128 },
+        "action": { "type": "string", "maxLength": 64 },
+        "module": { "type": "string", "maxLength": 64 },
+        "targetId": { "type": "string", "maxLength": 128 },
+        "targetType": { "type": "string", "maxLength": 64 },
+        "description": { "type": "string", "maxLength": 1000 }
+      },
+      "required": ["id", "timestamp", "actorEmail", "action", "module", "description"]
+    },
+    "UserInvitation": {
+      "title": "UserInvitation",
+      "description": "Team member access invitation with temporary code and department boundaries",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 254 },
+        "role": { "type": "string", "maxLength": 64 },
+        "department": { "type": "string", "maxLength": 128 },
+        "inviteCode": { "type": "string", "maxLength": 64 },
+        "status": { "type": "string", "maxLength": 32 },
+        "invitedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "email", "role", "inviteCode"]
+    }
+  },
+  "firestore": {
+    "/organizations/{orgId}": {
+      "schema": { "$ref": "Organization" },
+      "description": "Central organization entity housing shared enterprise data and settings"
+    },
+    "/organizations/{orgId}/audit_logs/{logId}": {
+      "schema": { "$ref": "AuditLogEntry" },
+      "description": "Enterprise audit log trail recording all important modifications across all modules"
+    },
+    "/organizations/{orgId}/batches/{batchId}": {
+      "schema": { "$ref": "ImportBatch" },
+      "description": "Shared import batches for the enterprise organization"
+    },
+    "/organizations/{orgId}/record_chunks/{chunkId}": {
+      "schema": { "$ref": "RecordChunk" },
+      "description": "Shared sales record chunks for the enterprise organization"
+    },
+    "/organizations/{orgId}/purchasing_pos/{poId}": {
+      "schema": { "$ref": "PurchaseOrder" },
+      "description": "Central enterprise purchase orders"
+    },
+    "/organizations/{orgId}/purchasing_suppliers/{supplierId}": {
+      "schema": { "$ref": "Supplier" },
+      "description": "Central enterprise supplier directory"
+    },
+    "/organizations/{orgId}/purchasing_receipts/{receiptId}": {
+      "schema": { "$ref": "PurchaseReceipt" },
+      "description": "Central enterprise purchase receipts"
+    },
+    "/organizations/{orgId}/purchasing_payments/{paymentId}": {
+      "schema": { "$ref": "SupplierPayment" },
+      "description": "Central enterprise supplier payment records"
+    },
+    "/organizations/{orgId}/rma_records/{rmaId}": {
+      "schema": { "$ref": "RMAItem" },
+      "description": "Central enterprise Return Merchandise Authorization (RMA) records"
+    },
+    "/audit_logs/{logId}": {
+      "schema": { "$ref": "AuditLogEntry" },
+      "description": "Global enterprise audit logs collection"
+    },
+    "/invitations/{invId}": {
+      "schema": { "$ref": "UserInvitation" },
+      "description": "Pending team invitations registry"
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "User" },
+      "description": "Collection of employee user profiles and assigned organizational roles"
+    },
+    "/admins/{userId}": {
+      "schema": { "$ref": "Admin" },
+      "description": "Admin authorization collection enabling administrative privileges"
+    },
+    "/authorized_members/{memberId}": {
+      "schema": { "$ref": "AuthorizedMember" },
+      "description": "Whitelist registry of team member emails permitted to log into the private organization app"
+    },
+    "/sales_records/{recordId}": {
+      "schema": { "$ref": "SalesRecord" },
+      "description": "Protected enterprise sales records"
+    },
+    "/organization_settings/{settingId}": {
+      "schema": { "$ref": "OrganizationSettings" },
+      "description": "Protected enterprise settings and configurations"
+    },
+    "/test/{testId}": {
+      "schema": { "$ref": "TestConnection" },
+      "description": "Public health check endpoint for verifying Firestore backend connectivity"
+    }
+  }
+}

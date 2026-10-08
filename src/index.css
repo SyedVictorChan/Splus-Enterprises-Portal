@@ -1,0 +1,180 @@
+@import "tailwindcss";
+
+@theme {
+  --color-zinc-50: #FAF8F5;
+  --color-zinc-100: #F3EFE8;
+  --color-zinc-200: #D9E0E2;
+  --color-zinc-300: #C2CBD0;
+  --color-zinc-400: #8FAFC2;
+  --color-zinc-500: #65747C;
+  --color-zinc-600: #4B5961;
+  --color-zinc-700: #374349;
+  --color-zinc-800: #263238;
+  --color-zinc-850: #1E272D;
+  --color-zinc-900: #1A2228;
+  --color-zinc-950: #151D22;
+
+  --color-cream-50: #FCFAF6;
+  --color-cream-100: #F8F6F0;
+  --color-cream-200: #F2EFE8;
+  --color-cream-300: #E7E2D8;
+  --color-cream-surface: #FFFDF8;
+
+  --color-softblue-50: #F0F6F9;
+  --color-softblue-100: #DCEAF0;
+  --color-softblue-200: #B8D4E2;
+  --color-softblue-300: #8FAFC2;
+  --color-softblue-400: #7A9FB4;
+  --color-softblue-500: #648A9E;
+  --color-softblue-600: #4E7387;
+  --color-softblue-700: #3D5C6D;
+  --color-softblue-800: #2E4552;
+  --color-softblue-900: #21323C;
+
+  --color-charcoal-50: #ECEFF1;
+  --color-charcoal-100: #CFD8DC;
+  --color-charcoal-200: #B0BEC5;
+  --color-charcoal-300: #90A4AE;
+  --color-charcoal-400: #78909C;
+  --color-charcoal-500: #65747C;
+  --color-charcoal-600: #4B5961;
+  --color-charcoal-700: #374349;
+  --color-charcoal-800: #263238;
+  --color-charcoal-900: #1A2228;
+}
+
+:root {
+  --background: #F8F6F0;
+  --surface: #FFFDF8;
+  --surface-secondary: #F3EFE8;
+  --primary: #7A9FB4;
+  --primary-hover: #688FA5;
+  --primary-light: #DCEAF0;
+  --text-primary: #263238;
+  --text-secondary: #65747C;
+  --border: #D9E0E2;
+  --border-light: #E7EEF0;
+  --input-background: #FFFDF8;
+  --hover-background: #F0F5F7;
+}
+
+.dark {
+  --background: #151D22;
+  --surface: #1A2228;
+  --surface-secondary: #222C33;
+  --primary: #8FAFC2;
+  --primary-hover: #A3C2D3;
+  --primary-light: #25333C;
+  --text-primary: #E6EDF2;
+  --text-secondary: #94A3B8;
+  --border: #2C373E;
+  --border-light: #232C32;
+  --input-background: #1C252B;
+  --hover-background: #25333C;
+}
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #F8F6F0;
+    color: #263238;
+  }
+  .dark body {
+    background-color: #151D22;
+    color: #E6EDF2;
+  }
+}
+
+/* Custom scrollbar styled with Cream + Soft Blue tones */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C2CBD0;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8FAFC2;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #2E3B42;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #4A5B64;
+}
+
+/* Continuous subtle moving gradient animation for "SPLUS Portal | Executive Sales Dashboard" heading/text
+   Using user specified gradient colors: #9BCB3C and #3B8DC5 */
+@keyframes splusPortalGradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.splus-portal-animated-text {
+  display: inline-block;
+  background-size: 250% 100%;
+  background-image: linear-gradient(
+    90deg,
+    #2B76A8 0%,
+    #3B8DC5 20%,
+    #88B731 45%,
+    #9BCB3C 55%,
+    #3B8DC5 80%,
+    #2B76A8 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: splusPortalGradientFlow 8s ease-in-out infinite;
+  will-change: background-position;
+}
+
+.dark .splus-portal-animated-text {
+  background-image: linear-gradient(
+    90deg,
+    #4A9ED7 0%,
+    #9BCB3C 35%,
+    #3B8DC5 70%,
+    #4A9ED7 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Dedicated variant for elements explicitly placed on dark surfaces (e.g. sidebar) */
+.splus-portal-animated-text-dark {
+  background-image: linear-gradient(
+    90deg,
+    #4A9ED7 0%,
+    #9BCB3C 35%,
+    #3B8DC5 70%,
+    #4A9ED7 100%
+  ) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splus-portal-animated-text,
+  .splus-portal-animated-text-dark {
+    animation: none !important;
+  }
+}
